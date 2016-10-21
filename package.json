@@ -1,8 +1,10 @@
 {
   "name": "vue-dmresource",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Wrapper for vue-resource to provide API layer in Vue web app",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "main": "dist/index.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
