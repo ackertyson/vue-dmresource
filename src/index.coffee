@@ -8,12 +8,14 @@ class DMResource
   constructor: (@name, routes) ->
     @base_url = '/api/' # default
     if routes? # build custom routes
-      @_add_custom name, route.url, route.method for name, route of routes
+      @_add_custom name, config for name, config of routes
 
   _name: (name) ->
     "API: #{@name.toUpperCase()}.#{name}"
 
-  _add_custom: (name, url, method) ->
+  _add_custom: (name, config) ->
+    { url, method } = config
+    exact = config.exact or false
     if name is "base" # override default base_url
       url += '/' unless url.slice(-1) is '/' # add trailing slash
       @base_url = url
@@ -49,7 +51,8 @@ class DMResource
       url = slugs.join '/'
       url = url.slice(1) if url.slice(0, 1) is '/' # trim leading slash
       try # catch bad METHODS, etc...
-        Vue.http[method.toLowerCase()]("#{@base_url}#{@name}/#{url}", args...).then (data) ->
+        url = "#{@base_url}#{@name}/#{url}" unless exact
+        Vue.http[method.toLowerCase()](url, args...).then (data) ->
           data.body
         .catch (err) ->
           console.log err

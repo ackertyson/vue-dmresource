@@ -7,7 +7,7 @@ passed to handler, or named params (:param) can be passed as object. Base URL
 can be provided as a custom route named "base" (see example below).
 
 Request URL is concatenated like so: `BASE_URL/NAME/CUSTOM_ROUTE_URL`; for
-example: `/api/work_order/?/notes`.
+example: `/api/work_order/?/notes` (unless `exact` prop is set; see below).
 
 ##Installation
 `npm i --save vue-dmresource`
@@ -18,6 +18,9 @@ example: `/api/work_order/?/notes`.
 `ApiName` is how you refer to the API in your component; `name` will be appended
 to each request URL (see above) and would typically correspond to a subroute of
 your backend API; see below for `custom_route_config` example.
+
+You can specify an exact URL by including `exact: true` in your route
+definition.
 
 ##Example component
 ```
@@ -32,6 +35,10 @@ WorkOrder = new API 'work_order',
   get_items: # route with named parameter(s)
     method: 'get'
     url: '/:id/items'
+  get_others: # route with exact URL
+    method: 'get'
+    url: '/not_api/?/all/different'
+    exact: true
 
 Vue.extend
   name: 'work_order'
