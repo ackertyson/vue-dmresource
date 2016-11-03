@@ -1,7 +1,7 @@
 unless window?.Vue? # Vue is loaded in <SCRIPT> tag; don't try 'require' it
   Vue = require 'vue'
   VueResource = require 'vue-resource'
-Vue.use VueResource
+Vue.use VueResource if Vue? #TODO conditional only adding for testing...
 hs = require './helpers'
 
 class DMResource
@@ -19,10 +19,11 @@ class DMResource
     if name is "base" # override default base_url
       url += '/' unless url.slice(-1) is '/' # add trailing slash
       @base_url = url
+      return
     slugs = url.split '/'
     wildcards = []
     named = {}
-    rgx_named = new RegExp /^:(\w+)/, 'i' # match named param
+    rgx_named = /^:(\w+)/i # match named param
     try # for reasons not entirely clear to me, certain errors in this block get swallowed whole unless we try/catch them...
       for slug, i in slugs
         if slug is '?' # wildcard parameter (e.g., /api/type/?/items)

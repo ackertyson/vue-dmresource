@@ -13,6 +13,10 @@ module.exports = (grunt) ->
         dest: 'dist/'
         ext: '.js'
 
+    mochaTest:
+      test:
+        src: [ 'test/**/*.coffee' ]
+
     uglify:
       default:
         files:
@@ -21,5 +25,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-uglify')
+  grunt.loadNpmTasks('grunt-mocha-test')
 
+  grunt.registerTask('test', ['mochaTest'])
   grunt.registerTask('default', ['clean', 'coffee', 'uglify'])
