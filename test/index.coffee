@@ -28,6 +28,7 @@ describe 'vue-dmresource', ->
     @resource = require '../src'
     done()
 
+
   describe 'constructor', ->
     it 'should set name and default URL', ->
       Api = new @resource 'API'
@@ -44,6 +45,7 @@ describe 'vue-dmresource', ->
           method: 'get'
           url: '/custom/url'
       expect(Api.custom).to.be.a.function
+
 
   describe 'BUILT-INS', ->
     describe 'all', ->
@@ -110,6 +112,7 @@ describe 'vue-dmresource', ->
           slugs[3].should.equal '1234'
           body.should.have.property 'main', 'hi there'
 
+
   describe 'CUSTOM', ->
     describe 'delete', ->
       it 'should request to correct URL', ->
@@ -124,6 +127,7 @@ describe 'vue-dmresource', ->
           data[2].should.equal 'fake'
           data[3].should.equal 'thing'
           data[4].should.equal '1234'
+
 
     describe 'get', ->
       it 'single wildcard param', ->
@@ -182,6 +186,18 @@ describe 'vue-dmresource', ->
           data[5].should.equal 'stuff'
           data[6].should.equal '5678'
 
+      it 'should honor EXACT prop', ->
+        Api = new @resource 'API',
+          custom:
+            method: 'get'
+            url: '/custom/url/?'
+            exact: true
+        Api.custom(1234).then (data) ->
+          data.should.have.length 3
+          data[0].should.equal 'custom'
+          data[1].should.equal 'url'
+          data[2].should.equal '1234'
+
       it 'bad args to wildcard params', ->
         Api = new @resource 'fake',
           custom:
@@ -235,6 +251,16 @@ describe 'vue-dmresource', ->
         catch ex
           expect(ex).to.be.instanceof Error
 
+      it 'mixed params in other order', ->
+        try
+          Api = new @resource 'fake',
+            custom:
+              method: 'get'
+              url: '/thing/:name/?'
+        catch ex
+          expect(ex).to.be.instanceof Error
+
+
     describe 'post', ->
       it 'should request to correct URL', ->
         Api = new @resource 'fake',
@@ -249,6 +275,7 @@ describe 'vue-dmresource', ->
           slugs[2].should.equal 'fake'
           slugs[3].should.equal 'thing'
           body.should.have.property 'id', 1234
+
 
     describe 'put', ->
       it 'should request to correct URL', ->
