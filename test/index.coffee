@@ -203,44 +203,40 @@ describe 'vue-dmresource', ->
           custom:
             method: 'get'
             url: '/thing/?'
-        try
-          Api.custom({ id: 1234 }).then (data) ->
-            expect(data).to.be.null # we should never get here
-        catch ex
-          expect(ex).to.be.instanceof Error
+        Api.custom({ id: 1234 }).then (data) ->
+          expect(data).to.be.null # we should never get here
+        .catch (err) ->
+          expect(err).to.be.instanceof Error
 
       it 'too few wildcard params', ->
         Api = new @resource 'fake',
           custom:
             method: 'get'
             url: '/thing/?/?'
-        try
-          Api.custom(1234).then (data) ->
-            expect(data).to.be.null # we should never get here
-        catch ex
-          expect(ex).to.be.instanceof Error
+        Api.custom(1234).then (data) ->
+          expect(data).to.be.null # we should never get here
+        .catch (err) ->
+          expect(err).to.be.instanceof Error
 
       it 'bad args to named params', ->
         Api = new @resource 'fake',
           custom:
             method: 'get'
             url: '/thing/:id/stuff/:name'
-        try
-          Api.custom(1234, 5678).then (data) ->
-            expect(data).to.be.null # we should never get here
-        catch ex
-          expect(ex).to.be.instanceof Error
+        Api.custom(1234, 5678).then (data) ->
+          expect(data).to.be.null # we should never get here
+        .catch (err) ->
+          expect(err).to.be.instanceof Error
 
       it 'too few named params', ->
         Api = new @resource 'fake',
           custom:
             method: 'get'
             url: '/thing/:id/:name'
-        try
-          Api.custom({ id: 1234 }).then (data) ->
-            expect(data).to.be.null # we should never get here
-        catch ex
-          expect(ex).to.be.instanceof Error
+        Api.custom({ id: 1234 }).then (data) ->
+          expect(data).to.be.null # we should never get here
+        .catch (err) ->
+          expect(err).to.be.instanceof Error
 
       it 'mixed params in definition', ->
         try

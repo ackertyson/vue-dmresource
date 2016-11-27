@@ -13,7 +13,7 @@ class DMResource
       @_add_custom name, config for name, config of routes
 
   _name: (name) ->
-    "API: #{@name.toUpperCase()}.#{name}"
+    "VUE-DMRESOURCE: #{@name.toUpperCase()}.#{name}"
 
   _add_custom: (name, config) ->
     { url, method } = config
@@ -40,14 +40,14 @@ class DMResource
 
     @[name] = (args...) => # return partially applied function to component
       if wildcards.length > 0 # handler uses wildcard (?) params
-        throw new Error "#{@_name name} expects at least #{wildcards.length} params, only got #{args.length}" unless wildcards.length <= args.length
-        throw new Error "#{@_name name}: use named parameters if you want to pass them in an object" if wildcards.length > 0 and hs.typeof(args[0]) is 'object'
+        return Promise.reject new Error "#{@_name name} expects at least #{wildcards.length} params, only got #{args.length}" unless wildcards.length <= args.length
+        return Promise.reject new Error "#{@_name name}: use named parameters if you want to pass them in an object" if wildcards.length > 0 and hs.typeof(args[0]) is 'object'
         for param, i in wildcards # substitute args for any expected params
           slugs[param] = args[i]
       else if Object.keys(named).length > 0 # handler uses named params
-        throw new Error "#{@_name name} uses named parameters; pass them as an object" unless hs.typeof(args[0]) is 'object'
+        return Promise.reject new Error "#{@_name name} uses named parameters; pass them as an object" unless hs.typeof(args[0]) is 'object'
         for param, i of named
-          throw new Error "#{@_name name} expects '#{param}' parameter" unless args[0]?[param]?
+          return Promise.reject new Error "#{@_name name} expects '#{param}' parameter" unless args[0]?[param]?
           slugs[i] = args[0][param]
 
       url = slugs.join '/'
