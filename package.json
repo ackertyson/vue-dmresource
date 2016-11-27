@@ -7,7 +7,7 @@
   ],
   "main": "dist/index.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test grunt test"
   },
   "author": "tyson@devmode.com",
   "license": "ISC",
@@ -18,6 +18,10 @@
     "grunt-contrib-coffee": "^1.0.0",
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-mocha-test": "^0.13.2",
+    "jsdomify": "^3.1.0",
     "mocha": "^3.1.2"
+  },
+  "dependencies": {
+    "promise": "^7.1.1"
   }
 }

@@ -53,3 +53,6 @@ Vue.extend
     .catch (err) ->
       console.log err
 ```
+
+##Testing
+`npm test`

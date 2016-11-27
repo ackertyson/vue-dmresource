@@ -1,7 +1,9 @@
 unless window?.Vue? # Vue is loaded in <SCRIPT> tag; don't try 'require' it
   Vue = require 'vue'
   VueResource = require 'vue-resource'
-Vue.use VueResource if Vue? #TODO conditional only adding for testing...
+Vue = window.Vue if process.env.NODE_ENV is 'test'
+Vue.use VueResource
+Promise = require 'promise'
 hs = require './helpers'
 
 class DMResource
@@ -34,7 +36,6 @@ class DMResource
           arr = slug.match rgx_named
           named[arr[1]] = i # record position of named param in URL
     catch ex
-      console.log ex
       return false
 
     @[name] = (args...) => # return partially applied function to component
