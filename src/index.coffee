@@ -26,17 +26,14 @@ class DMResource
     wildcards = []
     named = {}
     rgx_named = /^:(\w+)/i # match named param
-    try # for reasons not entirely clear to me, certain errors in this block get swallowed whole unless we try/catch them...
-      for slug, i in slugs
-        if slug is '?' # wildcard parameter (e.g., /api/type/?/items)
-          throw new Error "#{@_name name} can't use both wildcard (?) and named (:param) parameters" if Object.keys(named).length > 0
-          wildcards.push i # record position of param in URL
-        else if rgx_named.test slug # named param (e.g., /api/type/:id/items)
-          throw new Error "#{@_name name} can't use both wildcard (?) and named (:param) parameters" if wildcards.length > 0
-          arr = slug.match rgx_named
-          named[arr[1]] = i # record position of named param in URL
-    catch ex
-      return false
+    for slug, i in slugs
+      if slug is '?' # wildcard parameter (e.g., /api/type/?/items)
+        throw new Error "#{@_name name} can't use both wildcard (?) and named (:param) parameters" if Object.keys(named).length > 0
+        wildcards.push i # record position of param in URL
+      else if rgx_named.test slug # named param (e.g., /api/type/:id/items)
+        throw new Error "#{@_name name} can't use both wildcard (?) and named (:param) parameters" if wildcards.length > 0
+        arr = slug.match rgx_named
+        named[arr[1]] = i # record position of named param in URL
 
     @[name] = (args...) => # return partially applied function to component
       if wildcards.length > 0 # handler uses wildcard (?) params

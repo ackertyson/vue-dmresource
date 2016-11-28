@@ -4,7 +4,6 @@ should = chai.should()
 Promise = require 'promise'
 dom = require('jsdomify').default
 
-
 describe 'vue-dmresource', ->
   before (done) ->
     dom.create()
@@ -23,8 +22,6 @@ describe 'vue-dmresource', ->
           slugs = url.split('/')
           Promise.resolve body: [slugs, r_body]
       use: ->
-    _set = (method, func) ->
-      window.Vue.http[method] = func
     @resource = require '../src'
     done()
 
