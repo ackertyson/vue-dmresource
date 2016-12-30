@@ -1,6 +1,6 @@
 unless window?.Vue? # Vue is loaded in <SCRIPT> tag; don't try 'require' it
   Vue = require 'vue'
-  VueResource = require 'vue-resource'
+VueResource = require 'vue-resource'
 Vue = window.Vue if process.env.NODE_ENV is 'test'
 Vue.use VueResource
 Promise = require 'promise'
