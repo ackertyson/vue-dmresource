@@ -17,6 +17,7 @@ class DMResource
 
   _add_custom: (name, config) ->
     { url, method } = config
+    strict = config.strict or false if method?.toLowerCase() is 'put' # require explicit BODY arg (in addition to URL params arg)
     exact = config.exact or false
     if name is "base" # override default base_url
       url += '/' unless url.slice(-1) is '/' # add trailing slash
@@ -41,16 +42,18 @@ class DMResource
         return Promise.reject new Error "#{@_name name}: use named parameters if you want to pass them in an object" if wildcards.length > 0 and hs.typeof(args[0]) is 'object'
         for param, i in wildcards # substitute args for any expected params
           slugs[param] = args[i]
+        args = args.slice wildcards.length # cut URL params out of ARGS
       else if Object.keys(named).length > 0 # handler uses named params
         return Promise.reject new Error "#{@_name name} uses named parameters; pass them as an object" unless hs.typeof(args[0]) is 'object'
         for param, i of named
           return Promise.reject new Error "#{@_name name} expects '#{param}' parameter" unless args[0]?[param]?
           slugs[i] = args[0][param]
+        args = args.slice 1 if strict is true # cut URL params obj out of ARGS for strict PUT requests
 
       url = slugs.join '/'
       url = url.slice(1) if url.slice(0, 1) is '/' # trim leading slash
       try # catch bad METHODS, etc...
-        url = "#{@base_url}#{@name}/#{url}" unless exact
+        url = "#{@base_url}#{@name}/#{url}" unless exact is true
         Vue.http[method.toLowerCase()](url, args...).then (data) ->
           data.body
         .catch (err) ->

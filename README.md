@@ -39,6 +39,13 @@ WorkOrder = new API 'work_order',
     method: 'get'
     url: '/not_api/?/all/different'
     exact: true
+  update_item:
+    method: 'put'
+    url: '/item/:id'
+  update_item_strict: # PUT route that requires explicit PARAMS arg
+    method: 'put'
+    strict: true
+    url: '/item2/:id'
 
 Vue.extend
   name: 'work_order'
@@ -52,6 +59,14 @@ Vue.extend
         @items = items
     .catch (err) ->
       console.log err
+
+  WorkOrder.update_item({ id: 1234, name: 'Made up' }).then (data) ->
+    # ID param will be pulled from provided BODY
+    updated_item = data
+
+  WorkOrder.update_item_strict({ id: 1234 }, { name: 'Made up' }).then (data) ->
+    # ID param must be explicitly passed (in addition to BODY)
+    updated_item = data
 ```
 
 ##Testing

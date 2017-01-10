@@ -140,6 +140,19 @@ describe 'vue-dmresource', ->
           data[3].should.equal 'thing'
           data[4].should.equal '1234'
 
+      it 'single wildcard param with options', ->
+        Api = new @resource 'fake',
+          custom:
+            method: 'get'
+            url: '/thing/?'
+        Api.custom(1234, headers: { Auth: 'junk' }).then (data) ->
+          data.should.have.length 5
+          data[0].should.equal ''
+          data[1].should.equal 'api'
+          data[2].should.equal 'fake'
+          data[3].should.equal 'thing'
+          data[4].should.equal '1234'
+
       it 'multiple wildcard params', ->
         Api = new @resource 'fake',
           custom:
@@ -277,6 +290,22 @@ describe 'vue-dmresource', ->
             method: 'put'
             url: '/thing/:id'
         Api.custom({ id: 1234, body: 5678 }).then (data) ->
+          [slugs, body] = data
+          slugs.should.have.length 5
+          slugs[0].should.equal ''
+          slugs[1].should.equal 'api'
+          slugs[2].should.equal 'fake'
+          slugs[3].should.equal 'thing'
+          slugs[4].should.equal '1234'
+          body.should.have.property 'body', 5678
+
+      it 'should require separate BODY arg if strict', ->
+        Api = new @resource 'fake',
+          custom:
+            method: 'put'
+            strict: true
+            url: '/thing/:id'
+        Api.custom({ id: 1234 }, { body: 5678 }).then (data) ->
           [slugs, body] = data
           slugs.should.have.length 5
           slugs[0].should.equal ''
