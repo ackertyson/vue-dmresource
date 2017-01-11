@@ -13,14 +13,25 @@ example: `/api/work_order/?/notes` (unless `exact` prop is set; see below).
 `npm i --save vue-dmresource`
 
 ##Basic Usage
-`ApiName = new API name, [custom_route_config]`
+```
+API = require 'vue-dmresource'
+MyApi = new API name [, custom_route_config]
+```
 
 `ApiName` is how you refer to the API in your component; `name` will be appended
 to each request URL (see above) and would typically correspond to a subroute of
-your backend API; see below for `custom_route_config` example.
+your backend API; see example below.
 
 You can specify an exact URL by including `exact: true` in your route
-definition.
+definition. In most browsers including a leading `/` will cause that URL to be
+interpreted relative to the host portion of the current URL; omitting the
+leading slash will typically append to the current URL path; including the
+protocol usually will allow you to specify the exact URL from start to finish.
+
+Using named parameters with custom `PUT` methods can be convenient when the
+value you want to use as the URL parameter is contained in the body of the
+request. In that case, just name your URL parameter the same as the name of the
+body key which contains that value and it will be parsed automagically.
 
 ##Example component
 ```
@@ -39,13 +50,16 @@ WorkOrder = new API 'work_order',
     method: 'get'
     url: '/not_api/?/all/different'
     exact: true
+  get_external: # route with complete exact URL
+    method: 'get'
+    url: 'http://other-external-web-site.com/items/?'
+    exact: true
   update_item:
     method: 'put'
-    url: '/item/:id'
-  update_item_strict: # PUT route that requires explicit PARAMS arg
+    url: '/item/?'
+  update_item_named:
     method: 'put'
-    strict: true
-    url: '/item2/:id'
+    url: '/item/:id'
 
 Vue.extend
   name: 'work_order'
@@ -53,20 +67,20 @@ Vue.extend
     items: []
     notes: []
   mounted: () ->
-    WorkOrder.get_notes(1000234).then (notes) ->
+    WorkOrder.get_notes(1234).then (notes) ->
       @notes = notes
-      WorkOrder.get_items({ id: 1000999 }).then (items) ->
+      WorkOrder.get_items({ id: 1999 }).then (items) ->
         @items = items
     .catch (err) ->
       console.log err
 
-  WorkOrder.update_item({ id: 1234, name: 'Made up' }).then (data) ->
-    # ID param will be pulled from provided BODY
-    updated_item = data
+    WorkOrder.update_item(1234, { name: 'Made up' }).then (data) ->
+      # wildcard ('?') ID param provided explicitly
+      updated_item = data
 
-  WorkOrder.update_item_strict({ id: 1234 }, { name: 'Made up' }).then (data) ->
-    # ID param must be explicitly passed (in addition to BODY)
-    updated_item = data
+    WorkOrder.update_item_named({ id: 1234, name: 'Made up' }).then (data) ->
+      # named ID param will be pulled from provided BODY
+      updated_item = data
 ```
 
 ##Testing

@@ -17,7 +17,6 @@ class DMResource
 
   _add_custom: (name, config) ->
     { url, method } = config
-    strict = config.strict or false if method?.toLowerCase() is 'put' # require explicit BODY arg (in addition to URL params arg)
     exact = config.exact or false
     if name is "base" # override default base_url
       url += '/' unless url.slice(-1) is '/' # add trailing slash
@@ -48,7 +47,6 @@ class DMResource
         for param, i of named
           return Promise.reject new Error "#{@_name name} expects '#{param}' parameter" unless args[0]?[param]?
           slugs[i] = args[0][param]
-        args = args.slice 1 if strict is true # cut URL params obj out of ARGS for strict PUT requests
 
       url = slugs.join '/'
       url = url.slice(1) if url.slice(0, 1) is '/' # trim leading slash

@@ -299,13 +299,13 @@ describe 'vue-dmresource', ->
           slugs[4].should.equal '1234'
           body.should.have.property 'body', 5678
 
-      it 'should require separate BODY arg if strict', ->
+      it 'should handle separate BODY arg with wildcard', ->
         Api = new @resource 'fake',
           custom:
             method: 'put'
             strict: true
-            url: '/thing/:id'
-        Api.custom({ id: 1234 }, { body: 5678 }).then (data) ->
+            url: '/thing/?'
+        Api.custom(1234, { body: 5678 }).then (data) ->
           [slugs, body] = data
           slugs.should.have.length 5
           slugs[0].should.equal ''
