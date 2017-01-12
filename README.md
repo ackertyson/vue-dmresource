@@ -28,10 +28,16 @@ interpreted relative to the host portion of the current URL; omitting the
 leading slash will typically append to the current URL path; including the
 protocol usually will allow you to specify the exact URL from start to finish.
 
+When using named URL parameters in custom methods, verbs `PATCH`, `POST` and
+`PUT` require that all parameters be contained in the BODY of the request, which
+is the only required argument to the method (the VueResource `options` object is
+the optional second argument). If your URL parameters can't be included in the
+BODY, you should use wildcard (?) parameters instead.
+
 Using named parameters with custom `PUT` methods can be convenient when the
-value you want to use as the URL parameter is contained in the body of the
-request. In that case, just name your URL parameter the same as the name of the
-body key which contains that value and it will be parsed automagically.
+value(s) you want to use as the URL parameter(s) are contained in the body of the
+request. In that case, just name your URL parameter(s) the same as the name of the
+body key(s) which contains those values and they will be parsed automagically.
 
 ##Example component
 ```

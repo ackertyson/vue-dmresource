@@ -47,6 +47,8 @@ class DMResource
         for param, i of named
           return Promise.reject new Error "#{@_name name} expects '#{param}' parameter" unless args[0]?[param]?
           slugs[i] = args[0][param]
+        unless method.toLowerCase() in ['patch', 'post', 'put'] # no BODY expected
+          args = args.slice 1 # cut URL params out of ARGS
 
       url = slugs.join '/'
       url = url.slice(1) if url.slice(0, 1) is '/' # trim leading slash
