@@ -18,9 +18,9 @@ API = require 'vue-dmresource'
 MyApi = new API name [, custom_route_config]
 ```
 
-`ApiName` is how you refer to the API in your component; `name` will be appended
-to each request URL (see above) and would typically correspond to a subroute of
-your backend API; see example below.
+`MyApi` is (in this example) how you refer to the API in your component; `name`
+will be appended to each request URL (see above) and would typically correspond
+to a subroute of your backend API; see example below.
 
 You can specify an exact URL by including `exact: true` in your route
 definition. In most browsers including a leading `/` will cause that URL to be
