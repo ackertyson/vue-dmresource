@@ -56,47 +56,29 @@ class DMResource
         url = "#{@base_url}#{@name}/#{url}" unless exact is true
         Vue.http[method.toLowerCase()](url, args...).then (data) ->
           data.body
-        .catch (err) ->
-          console.log err
-          err
       catch ex
-        console.log ex
+        console.log "[vue-dmresource]:", ex
 
 
   all: (options) ->
     Vue.http.get("#{@base_url}#{@name}", options).then (data) ->
       data.body
-    .catch (err) ->
-      console.log err
-      err
 
   create: (body, options) ->
     Vue.http.post("#{@base_url}#{@name}", body, options).then (data) ->
       data.body
-    .catch (err) ->
-      console.log err
-      err
 
   delete: (id, options) ->
     Vue.http.delete("#{@base_url}#{@name}/#{id}", options).then (data) ->
       data.body
-    .catch (err) ->
-      console.log err
-      err
 
   find_by_id: (id, options) ->
     Vue.http.get("#{@base_url}#{@name}/#{id}", options).then (data) ->
       data.body
-    .catch (err) ->
-      console.log err
-      err
 
   update: (id, body, options) ->
     Vue.http.put("#{@base_url}#{@name}/#{id}", body, options).then (data) ->
       data.body
-    .catch (err) ->
-      console.log err
-      err
 
 
 module.exports = DMResource

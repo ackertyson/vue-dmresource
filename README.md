@@ -23,10 +23,10 @@ will be appended to each request URL (see above) and would typically correspond
 to a subroute of your backend API; see example below.
 
 You can specify an exact URL by including `exact: true` in your route
-definition. In most browsers including a leading `/` will cause that URL to be
-interpreted relative to the host portion of the current URL; omitting the
-leading slash will typically append to the current URL path; including the
-protocol usually will allow you to specify the exact URL from start to finish.
+definition. Including a leading `/` will cause that URL to be interpreted
+relative to `window.location.host` (the site document root); omitting the
+leading slash makes it a relative URL; including a protocol (`http://`) will
+allow you to specify the exact URL from start to finish.
 
 When using named URL parameters in custom methods, verbs `PATCH`, `POST` and
 `PUT` require that all parameters be contained in the BODY of the request, which
@@ -68,7 +68,7 @@ WorkOrder = new API 'work_order',
     url: '/item/:id'
 
 Vue.extend
-  name: 'work_order'
+  name: 'wo-component'
   data: () ->
     items: []
     notes: []
