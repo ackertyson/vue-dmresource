@@ -1,4 +1,4 @@
-#vue-dmresource
+# vue-dmresource
 
 Convenience wrapper for VueResource to provide API layer in Vue web app. Common
 handlers are built in. Custom route descriptors can be passed into
@@ -9,10 +9,10 @@ can be provided as a custom route named "base" (see example below).
 Request URL is concatenated like so: `BASE_URL/NAME/CUSTOM_ROUTE_URL`; for
 example: `/api/work_order/?/notes` (unless `exact` prop is set; see below).
 
-##Installation
+## Installation
 `npm i --save vue-dmresource`
 
-##Basic Usage
+## Basic Usage
 ```
 API = require 'vue-dmresource'
 MyApi = new API name [, custom_route_config]
@@ -39,7 +39,7 @@ value(s) you want to use as the URL parameter(s) are contained in the body of th
 request. In that case, just name your URL parameter(s) the same as the name of the
 body key(s) which contains those values and they will be parsed automagically.
 
-##Example component
+## Example component
 ```
 Vue = require 'vue' # omit if Vue is loaded in <SCRIPT> tag
 API = require 'vue-dmresource'
@@ -89,5 +89,5 @@ Vue.extend
       updated_item = data
 ```
 
-##Testing
+## Testing
 `npm test`
