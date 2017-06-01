@@ -1,6 +1,6 @@
 {
   "name": "vue-dmresource",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Wrapper for vue-resource to provide API layer in Vue web app",
   "homepage": "http://providejs.com/",
   "repository": {
