@@ -1,4 +1,4 @@
-#vue-dmresource
+# vue-dmresource
 
 Convenience wrapper for VueResource to provide API layer in Vue web app. Common
 handlers are built in. Custom route descriptors can be passed into
@@ -9,10 +9,10 @@ can be provided as a custom route named "base" (see example below).
 Request URL is concatenated like so: `BASE_URL/NAME/CUSTOM_ROUTE_URL`; for
 example: `/api/work_order/?/notes` (unless `exact` prop is set; see below).
 
-##Installation
+## Installation
 `npm i --save vue-dmresource`
 
-##Basic Usage
+## Basic Usage
 ```
 API = require 'vue-dmresource'
 MyApi = new API name [, custom_route_config]
@@ -29,17 +29,14 @@ leading slash makes it a relative URL; including a protocol (`http://`) will
 allow you to specify the exact URL from start to finish.
 
 When using named URL parameters in custom methods, verbs `PATCH`, `POST` and
-`PUT` require that all parameters be contained in the BODY of the request, which
-is the only required argument to the method (the VueResource `options` object is
-the optional second argument). If your URL parameters can't be included in the
-BODY, you should use wildcard (?) parameters instead.
+`PUT` provide a handy shortcut if all parameters are contained in the BODY of
+the request: in this case, pass NULL for the PARAMS argument and your parameter
+keys will be parsed out of the BODY (see below for examples).
 
-Using named parameters with custom `PUT` methods can be convenient when the
-value(s) you want to use as the URL parameter(s) are contained in the body of the
-request. In that case, just name your URL parameter(s) the same as the name of the
-body key(s) which contains those values and they will be parsed automagically.
+The optional last argument to all methods (third for `PATCH`, `POST` and `PUT`;
+second for verbs which don't use a `BODY`) is the VueResource `OPTIONS` object.
 
-##Example component
+## Example component
 ```
 Vue = require 'vue' # omit if Vue is loaded in <SCRIPT> tag
 API = require 'vue-dmresource'
@@ -80,14 +77,27 @@ Vue.extend
     .catch (err) ->
       console.log err
 
+    # wildcard ('?') ID param provided explicitly
     WorkOrder.update_item(1234, { name: 'Made up' }).then (data) ->
-      # wildcard ('?') ID param provided explicitly
       updated_item = data
 
-    WorkOrder.update_item_named({ id: 1234, name: 'Made up' }).then (data) ->
-      # named ID param will be pulled from provided BODY
+    # named PARAMS and BODY provided explicitly
+    body = { name: 'Made up', status: 'active' }    
+    params = { id: 1234 }
+    WorkOrder.update_item_named(params, body).then (data) ->
+      updated_item = data
+
+    # no PARAMS; will be parsed from provided BODY
+    body = { id: 1234, name: 'Made up', status: 'active' }
+    WorkOrder.update_item_named(null, body).then (data) ->
+      updated_item = data
+
+    # optional last argument is VueResource OPTIONS
+    body = { id: 1234, name: 'Made up', status: 'active' }
+    options = { headers: Accept: 'application/json' }
+    WorkOrder.update_item_named(null, body, options).then (data) ->
       updated_item = data
 ```
 
-##Testing
+## Testing
 `npm test`

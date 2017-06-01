@@ -297,7 +297,7 @@ describe 'vue-dmresource', ->
           custom:
             method: 'post'
             url: '/thing'
-        Api.custom({ id: 1234 }, headers: Auth: 'fake').then (data) ->
+        Api.custom(null, { id: 1234 }, headers: Auth: 'fake').then (data) ->
           [slugs, body, options] = data
           slugs.should.have.length 4
           slugs[0].should.equal ''
@@ -312,7 +312,7 @@ describe 'vue-dmresource', ->
           custom:
             method: 'post'
             url: '/thing/:id'
-        Api.custom({ id: 1234 }, headers: Auth: 'fake').then (data) ->
+        Api.custom(null, { id: 1234 }, headers: Auth: 'fake').then (data) ->
           [slugs, body, options] = data
           slugs.should.have.length 5
           slugs[0].should.equal ''
@@ -330,7 +330,7 @@ describe 'vue-dmresource', ->
           custom:
             method: 'put'
             url: '/thing/:id'
-        Api.custom({ id: 1234, body: 5678 }, headers: Auth: 'fake').then (data) ->
+        Api.custom(null, { id: 1234, body: 5678 }, headers: Auth: 'fake').then (data) ->
           [slugs, body, options] = data
           slugs.should.have.length 5
           slugs[0].should.equal ''
@@ -339,6 +339,22 @@ describe 'vue-dmresource', ->
           slugs[3].should.equal 'thing'
           slugs[4].should.equal '1234'
           body.should.have.property 'body', 5678
+          options.should.have.property 'headers'
+
+      it 'should use BODY if provided', ->
+        Api = new @resource 'fake',
+          custom:
+            method: 'put'
+            url: '/thing/:id'
+        Api.custom({ id: 1234, body: 5678 }, { fake: 'one' }, headers: Auth: 'fake').then (data) ->
+          [slugs, body, options] = data
+          slugs.should.have.length 5
+          slugs[0].should.equal ''
+          slugs[1].should.equal 'api'
+          slugs[2].should.equal 'fake'
+          slugs[3].should.equal 'thing'
+          slugs[4].should.equal '1234'
+          body.should.have.property 'fake', 'one'
           options.should.have.property 'headers'
 
       it 'should handle separate BODY arg with wildcard', ->

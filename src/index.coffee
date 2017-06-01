@@ -36,25 +36,31 @@ class DMResource
         named[arr[1]] = i # record position of named param in URL
 
     @[name] = (args...) => # return partially applied function to component
+      _args = args.slice 1 # cut URL out of ARGS
       if wildcards.length > 0 # handler uses wildcard (?) params
         return Promise.reject new Error "#{@_name name} expects at least #{wildcards.length} params, only got #{args.length}" unless wildcards.length <= args.length
         return Promise.reject new Error "#{@_name name}: use named parameters if you want to pass them in an object" if wildcards.length > 0 and hs.typeof(args[0]) is 'object'
         for param, i in wildcards # substitute args for any expected params
           slugs[param] = args[i]
-        args = args.slice wildcards.length # cut URL params out of ARGS
+        _args = args.slice wildcards.length # cut URL params out of ARGS
       else if Object.keys(named).length > 0 # handler uses named params
-        return Promise.reject new Error "#{@_name name} uses named parameters; pass them as an object" unless hs.typeof(args[0]) is 'object'
+        if method.toLowerCase() in ['patch', 'post', 'put'] # BODY expected
+          [params, body, options] = args
+          params ?= body # use BODY if no PARAMS provided
+          _args = [body, options]
+        else # no BODY for this METHOD
+          [params, options] = args
+          _args = [options]
+        return Promise.reject new Error "#{@_name name} uses named parameters; pass them as an object" unless hs.typeof(params) is 'object'
         for param, i of named
-          return Promise.reject new Error "#{@_name name} expects '#{param}' parameter" unless args[0]?[param]?
-          slugs[i] = args[0][param]
-        unless method.toLowerCase() in ['patch', 'post', 'put'] # no BODY expected
-          args = args.slice 1 # cut URL params out of ARGS
+          return Promise.reject new Error "#{@_name name} expects '#{param}' parameter" unless params[param]?
+          slugs[i] = params[param]
 
       url = slugs.join '/'
       url = url.slice(1) if url.slice(0, 1) is '/' # trim leading slash
       try # catch bad METHODS, etc...
         url = "#{@base_url}#{@name}/#{url}" unless exact is true
-        Vue.http[method.toLowerCase()](url, args...).then (data) ->
+        Vue.http[method.toLowerCase()](url, _args...).then (data) ->
           data.body
       catch ex
         console.log "[vue-dmresource]:", ex
