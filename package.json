@@ -12,6 +12,7 @@
   ],
   "main": "dist/index.min.js",
   "scripts": {
+    "prepublishOnly": "npm test && grunt",
     "test": "NODE_ENV=test grunt test"
   },
   "author": "tyson@devmode.com",
